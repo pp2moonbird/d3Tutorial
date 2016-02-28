@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Basic Axes</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
+    <script src="/javascripts/d3.v3.min.js" charset="utf-8"></script>
+</head>
+
+<body>
+D3 Tutorial
+<div id="chart"></div>
+<script type="text/javascript">
+
+var rawdata;    
+var svgWidth = 800;
+var svgHeight = 600;
+var marginPercent = 0.1;
+var margin = {left:svgWidth * marginPercent, right: svgWidth * marginPercent, top:svgHeight*marginPercent, bottom:svgHeight*marginPercent };
+var chartWidth = svgWidth - margin.left - margin.right;
+var chartHeight = svgHeight - margin.top - margin.bottom;
+
+svg = d3.select("#chart")
+        .append("svg")
+        .attr("width", svgWidth)
+        .attr("height", svgHeight);
+        
+scale = d3.scale.linear()
+        .domain([0, 1000])
+        .range([chartHeight, 0]);
+        
+yAxis = d3.svg.axis()
+        .scale(scale)
+        .orient("left")
+        .ticks(4);
+
+svg.append("g")
+        .attr("class", "Axis")
+        .attr("transform", "translate(" + margin.left + "," + 0 + ")")
+        .call(yAxis);
+        
+scale2 = d3.scale.linear()
+        .domain([0, 1000])
+        .range([0, 150]);
+        
+yAxis2 = d3.svg.axis()
+        .scale(scale2)
+        .orient("left")
+        .ticks(4);
+
+svg.append("g")
+        .attr("class", "Axis")
+        .attr("transform", "translate(" + (margin.left + 50) + "," + 0 + ")")
+        .call(yAxis2);
+        
+
+scale3 = d3.scale.linear()
+           .domain([0, 1000])
+           .range([chartHeight, 0]);
+           
+yAxis3 = d3.svg.axis()
+        .scale(scale3)
+        .orient("left")
+        .ticks(4);
+        
+svg.append("g")
+        .attr("class", "Axis")
+        .attr("transform", "translate(" + (margin.left + 100) + "," + (margin.top) + ")")
+        .call(yAxis3);
+</script>      
+
+</body>
+</html>

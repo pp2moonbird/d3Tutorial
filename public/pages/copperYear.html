@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Basic Axes</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
+    <script src="/javascripts/d3.v3.min.js" charset="utf-8"></script>
+</head>
+
+<body>
+D3 Tutorial
+<div id="chart"></div>
+<script type="text/javascript">
+var rawdata;    
+var svgWidth = 800;
+var svgHeight = 400;
+
+data = d3.csv("copperYear.csv", function(data){
+        render(data);
+    });
+
+svg = d3.select("#chart")
+        .append("svg")
+        .attr("width", svgWidth)
+        .attr("height", svgHeight);
+        
+function render(data) {
+    rawdata = data;
+    
+    
+    
+    dataLength = rawdata.length;
+    for (i = 0; i<rawdata.length; i++) {
+        //code
+        rawdata[i].Price = parseFloat(rawdata[i].Price);
+    }
+    
+    maxPrice = d3.max(rawdata, function(d){return d.Price;});
+    
+    yScale = d3.scale.linear()
+                .domain([0, maxPrice])
+                .range([svgHeight, 0])
+    
+    bars = svg.selectAll("bars")
+                .data(rawdata)
+                .enter()
+                .append("rect")
+                .attr("x", function(d, i){return i * 70;})
+                .attr("y", function(d) {return svgHeight - yScale(d.Price);})
+                .attr("height", function(d, i){return yScale(d.Price);})
+                .attr("fill", "teal")
+                .attr("width", "50");
+}
+        
+</script>      
+
+</body>
+</html>
