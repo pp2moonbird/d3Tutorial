@@ -11,9 +11,13 @@
 D3 Tutorial
 <div id="chart"></div>
 <script type="text/javascript">
-var rawdata;    
+var rawdata;
+var yearArray=[];
 var svgWidth = 800;
 var svgHeight = 400;
+var margin = {top:svgHeight*0.1, bottom:svgHeight*0.1, left:svgWidth*0.1, right:svgWidth*0.1};
+var chartWidth = svgWidth - margin.left - margin.right;
+var chartHeight = svgHeight - margin.top - margin.bottom;
 
 data = d3.csv("copperYear.csv", function(data){
         render(data);
@@ -27,8 +31,12 @@ svg = d3.select("#chart")
 function render(data) {
     rawdata = data;
     
-    
-    
+
+		
+	for (var i=0;i< rawdata.length;i++) {
+		yearArray.push(rawdata[i].Year);
+	}
+		
     dataLength = rawdata.length;
     for (i = 0; i<rawdata.length; i++) {
         //code
@@ -37,19 +45,46 @@ function render(data) {
     
     maxPrice = d3.max(rawdata, function(d){return d.Price;});
     
+    // draw quantitative axis    
+    
     yScale = d3.scale.linear()
                 .domain([0, maxPrice])
-                .range([svgHeight, 0])
+                .range([margin.top + chartHeight, margin.top])
     
+    yAxis = d3.svg.axis()
+                .scale(yScale)
+                .orient("left")
+                .ticks(5);
+        
+	svg.append("g")
+				.attr("class","Axis")
+				.attr("transform", "translate(" + margin.left + "," + 0 + ")")
+				.call(yAxis);
+				
+	var xScaleStartingPoint = chartWidth * 0.1;
+	xScale = d3.scale.ordinal()
+				.domain(yearArray)
+				.rangeRoundBands([margin.left, margin.left + chartWidth], 0.1);
+	
+	xAxis = d3.svg.axis()
+				.scale(xScale)
+				.orient("bottom");
+	
+	svg.append("g")
+				.attr("class","Axis")
+				.attr("transform", "translate(" + 0 + "," + (margin.top + chartHeight)+ ")")
+				.call(xAxis);				
+	
+				
     bars = svg.selectAll("bars")
                 .data(rawdata)
                 .enter()
                 .append("rect")
-                .attr("x", function(d, i){return i * 70;})
-                .attr("y", function(d) {return svgHeight - yScale(d.Price);})
-                .attr("height", function(d, i){return yScale(d.Price);})
+                .attr("x", function(d, i){return xScale(d.Year);})
+                .attr("y", function(d) {return margin.top + yScale(d.Price);})
+                .attr("height", function(d, i){return chartHeight - yScale(d.Price);})
                 .attr("fill", "teal")
-                .attr("width", "50");
+                .attr("width", xScale.rangeBand());
 }
         
 </script>      
