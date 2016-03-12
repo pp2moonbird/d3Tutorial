@@ -15,7 +15,7 @@ var rawdata;
 var yearArray=[];
 var svgWidth = 800;
 var svgHeight = 400;
-var margin = {top:svgHeight*0.1, bottom:svgHeight*0.1, left:svgWidth*0.1, right:svgWidth*0.1};
+var margin = {top:svgHeight*0.2, bottom:svgHeight*0.1, left:svgWidth*0.1, right:svgWidth*0.1};
 var chartWidth = svgWidth - margin.left - margin.right;
 var chartHeight = svgHeight - margin.top - margin.bottom;
 
@@ -54,7 +54,8 @@ function render(data) {
     yAxis = d3.svg.axis()
                 .scale(yScale)
                 .orient("left")
-                .ticks(5);
+                .ticks(5)
+				.tickSize(-chartWidth);
         
 	svg.append("g")
 				.attr("class","Axis")
@@ -85,6 +86,31 @@ function render(data) {
                 .attr("height", function(d, i){return chartHeight - yScale(d.Price);})
                 .attr("fill", "teal")
                 .attr("width", xScale.rangeBand());
+				
+	texts = svg.selectAll("labels")
+				.data(rawdata)
+				.enter()
+				.append("text")
+				.attr("x", function(d, i){return xScale(d.Year) + xScale.rangeBand()/2;})
+                .attr("y", function(d) {return margin.top + yScale(d.Price) - 15;})
+				.attr("text-anchor", "middle")
+				.text(function(d){return Math.floor(d.Price);});
+	
+	var titleString = ["Copper Price Since 2012"]
+	title = svg.selectAll("chartTitle")
+				.data(titleString)
+				.enter()
+				.append("text")
+				.attr("x", margin.left)
+				.attr("y", margin.top/2)
+				.text(function(d) {return d;})
+				.attr("class", "chartTitle");
+	
+	var subTitle = "some sub title";
+		svg.append("text")
+				.text(subTitle)
+				.attr("x", margin.left)
+				.attr("y", margin.top);
 }
         
 </script>      

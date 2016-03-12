@@ -7,13 +7,24 @@ a {
   color: #00B7FF;
 }
 
-.Axis path,
+.Axis path {
+  display: none;
+}
 .Axis line {
     fill: none;
     stroke:  #808080   ;
-    shape-rendering: crispEdges;
+    opacity: 0.5;
+}
+
+.Axis .minor line {
+  stroke: #666;
 }
 
 #chart {
   border:solid black 1px;
+}
+
+.chartTitle {
+   font-size: 40px;
+
 }
